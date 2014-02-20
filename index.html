@@ -1,0 +1,307 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <title>EAK Components</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=792, user-scalable=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <link rel="stylesheet" href="shower/themes/ribbon/styles/screen.css">
+  </head>
+  <body class="list">
+    <header class="caption">
+      <h1>EAK & Pod Components</h1>
+      <p>Eas{y|ier} Cross-Team Development</p>
+    </header>
+<section class="slide cover" id="Cover"><div>
+    <h2>EAK & Pod Components</h2>
+    <p>Eas{y|ier} Cross-Team Development</p>
+<style>
+  #Cover h2 {
+    margin:30px 0 0;
+    color:#FFF;
+    text-align:center;
+    font-size:70px;
+  }
+  #Cover p {
+    margin:10px 0 0;
+    text-align:center;
+    color:#FFF;
+    /* font-style:italic; */
+    font-size:20px;
+  }
+  #Cover p a {
+    color:#FFF;
+  }
+</style>
+</div></section>
+
+<section class="slide"><div>
+  <h2>Why Use Custom UI Widgets?</h2>
+  <ul class="next">
+    <li>Visually consistent across platforms / browsers.</li>
+    <li>Provide enhanced functionality beyond
+      <code>&lt;button&gt;</code>,
+      <code>&lt;input&gt;</code>,
+      etc.</li>
+  </ul>
+  <div class="next">
+    <h2>Why Not?</h2>
+    <ul>
+      <li>Much more code.</li>
+      <li>Bloated dependencies.</li>
+    </ul>
+  </div>
+</div></section>
+
+<section class="slide"><div>
+  <h2>What Widgets to Build (or wrap)</h2>
+  <ul>
+    <li>
+      CSS UI Components
+      (<a href="http://getbootstrap.com/" target="_blank">bootstrap</a>,
+      <a href="http://topcoat.io/" target="_blank">topcoat</a>)
+    </li>
+    <li>
+      Date / Time Pickers
+      (<a href="http://amsul.ca/pickadate.js/" target="_blank">pickadate</a>)
+    </li>
+    <li>
+      Select / Multiselect
+      (<a href="http://harvesthq.github.io/chosen/" target="_blank">chosen</a>)
+    </li>
+    <li>
+      Data Viz
+      (<a href="http://d3js.org/" target="_blank">D3</a>)
+    </li>
+  </ul>
+</div></section>
+
+<section class="slide"><div>
+  <h2><code>&lt;switch&gt;</code></h2>
+  <ul>
+    <li>Stolen with love from <a href="http://topcoat.io/" target="_blank">Topcoat</a></li>
+    <li>Visual embellishment of a checkbox</li>
+    <li>Customizable text using data-attributes.</li>
+  </ul>
+  <img id="switches_png" src="pictures/switches.png" alt="">
+  <p class="note next">If you haven't looked at Topcoat, do it!</p>
+<style>
+  #switches_png {
+    position: absolute;
+    right: 200px;
+    top: 200px;
+  }
+</style>
+</div></section>
+
+<section class="slide"><div>
+  <h2>Unfortunately... More Complex Code</h2>
+  <pre>
+  <code>&lt;label for="check-me"&gt;Check Me&lt;/label&gt;</code>
+  <code>&lt;input type="checkbox" name="check-me"&gt;</code>
+  </pre>
+  <pre class="next">
+  <code>&lt;label class="cg-switch"></code>
+  <code>  &lt;input type="checkbox" class="cg-switch-input"&gt;</code>
+  <code>  &lt;div class="cg-switch-toggle"</code>
+  <code>       data-label-on="ON"</code>
+  <code>       data-label-off="OFF"&gt;&lt;/div&gt;</code>
+  <code>&lt;/label&gt;</code>
+  </pre>
+<style>
+  .slide pre code {
+    line-height: 30px;
+  }
+</style>
+</div></section>
+
+<section class="slide shout"><div>
+  <h2>Make A Component!</h2>
+</div></section>
+
+
+<section class="slide"><div>
+  <h2>Component Layout</h2>
+  <p>Wrap the markup in a handlebars layout</p>
+  <pre>
+  <code>&lt;input type=&quot;checkbox&quot; class=&quot;cg-switch-input&quot;</code>
+  <code>  {{bind-attr checked=&apos;isChecked&apos;}}&gt;</code>
+  <code>  &lt;div {{bind-attr</code>
+  <code>        data-label-on=&quot;ON&quot;</code>
+  <code>        data-label-off=&quot;OFF&quot;}}&gt;&lt;/div&gt;</code>
+  </pre>
+  <p class="note">Don't-forget-to-use-a-dash-in-the-name.</p>
+<style>
+  .slide pre code {
+    line-height: 30px;
+  }
+</style>
+</div></section>
+
+<section class="slide"><div>
+  <h2>Component Module</h2>
+  <pre>
+  <code>import Layout from 'path/to/layout';</code>
+  <code> </code>
+  <code>export default Ember.Component.extend({</code>
+  <code>  tagName: 'label',</code>
+  <code>  layout: Layout,</code>
+  <code>  classNames: ['cg-switch'],</code>
+  <code>  classNameBindings: ['disabledObserver:disabled'],</code>
+  <code class="next">  <mark>observedPropertyName: 'isChecked',</mark></code>
+  </pre>
+<style>
+  .slide pre code {
+    line-height: 30px;
+  }
+  mark {
+    margin-left: -6px;
+  }
+</style>
+</div></section>
+
+<section class="slide"><div>
+  <h2>Component Module</h2>
+  <pre>
+  <code>init: function() {</code>
+  <code>  this._super();</code>
+  <code> </code>
+  <code>  // allow the checked property name to be overwritten</code>
+  <code>  var propName = this.get('observedProperty');</code>
+  <code>  if (this.get('isChecked')) {</code>
+  <code>    this.set('owner.' + propName, true);</code>
+  <code>  }</code>
+  <code>  this.bind('isChecked', 'owner.' + propName);</code>
+  <code>}</code>
+  </pre>
+<style>
+  .slide pre code {
+    line-height: 30px;
+  }
+</style>
+</div></section>
+
+<section class="slide"><div>
+  <h2>Usage</h2>
+  <pre>
+  <code>Basic:</code>
+  <code>{{cg-switch owner=switchOwner}}</code>
+  </pre>
+  <pre>
+  <code>Full:</code>
+  <code>{{cg-switch</code>
+  <code>  owner=switchOwner</code>
+  <code>  labelOn=&quot;Custom Label&quot;     // default =&gt; &apos;ON&apos;</code>
+  <code>  labelOff=&quot;We&apos;re Off!&quot;      // default =&gt; &apos;OFF&apos;</code>
+  <code>  observedProperty=&quot;special&quot; // default =&gt; &apos;isChecked&apos;</code>
+  <code>}}</code>
+  </pre>
+<style>
+  .slide pre code {
+    line-height: 30px;
+  }
+</style>
+</div></section>
+
+<section class="slide"><div>
+  <h2>Future Usage</h2>
+  <pre>
+  <code>&lt;cg-switch owner="switchOwner"&gt;&lt;/cg-switch&gt;</code>
+  </pre>
+  <ul class="next">
+    <li>Scoped CSS</li>
+    <li>Shadow DOM</li>
+    <li>HTML Imports</li>
+  </ul>
+<style>
+  .slide pre code {
+    line-height: 30px;
+  }
+</style>
+</div></section>
+
+<section class="slide shout"><div>
+  <h2>Testing</h2>
+</div></section>
+
+<section class="slide"><div>
+  <h2>Things To Test</h2>
+  <ul>
+    <li>Attribute / class bindings are toggling the desired properties</li>
+    <li>Rendering performance</li>
+  </ul>
+  <h2>Things Not To Test</h2>
+  <ul>
+    <li>Anything modified by css</li>
+    <li>Built-in Ember methods</li>
+  </ul>
+</div></section>
+
+<section class="slide"><div>
+  <h2>How To Test</h2>
+  <ul>
+    <li>My first pass - dedicated testing templates, routes, controllers.</li>
+    <li class="next">Don't Do This!</li>
+  </ul>
+  <ul class="next">
+    <li>moduleForComponent</li>
+  </ul>
+  <pre class="next">
+    <code>moduleForComponent('cg-switch', 'description', {</code>
+    <code>  setup: function() { ... },</code>
+    <code>  teardown: function() { ... }</code>
+    <code>});</code>
+  </pre>
+
+</div></section>
+
+<section class="slide shout"><div>
+  <h2>Pods</h2>
+</div></section>
+
+<section class="slide"><div>
+  <h2>Better Directory Structure</h2>
+  <p>
+    Default:<br>
+    <code>app/{pod-name}/{module-type}</code><br><br>
+    Better:</br>
+    <code>app/{pod-directory}/{pod-name}/{module-type}</code><br><br>
+    Best (for teams):</br>
+    The the above, in submodules.
+    </p>
+</div></section>
+
+<section class="slide"><div>
+  <h2>Setup</h2>
+  <p>
+    Add <code><mark>podModulePrefix: 'appkit/pods'</mark></code>
+    to<br>
+    tests/helpers/resolver.js<br>
+    and<br>
+    app/app.js
+  </p>
+</div></section>
+
+<section class="slide shout" id="goodbye"><div>
+  <h2>
+    That's It!<br>
+    <a href="mailto:dylan@far.nsworth.com">dylan@far.nsworth.com</a><br>
+    <a href="http://twitter.com/farnsworthdylan" target="_blank">@farnsworthdylan</a>
+  </h2>
+<style>
+  #goodbye h2 {
+    font-size: 5rem;
+  }
+  #goodbye a {
+    font-size: 2rem;
+    line-height: 1rem;
+    margin-top: -2rem;
+  }
+</style>
+</div></section>
+
+
+<div class="progress"><div></div></div>
+<script src="shower/shower.min.js"></script>
+</body>
+</html>
